@@ -1,0 +1,299 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta charset="UTF-8">
+<head>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+                  body{
+            background-color:transparent;
+            margin: 0px;
+            height: 100%;
+            overflow: hidden;
+        }
+        #lottie{
+            background-color:transparent;
+            width:100%;
+            height:100%;
+            display:block;
+            overflow: hidden;
+            transform: translate3d(0,0,0);
+            text-align: center;
+            opacity: 1;
+        }
+        #Red1,#Red2,#Red3,#Orange1,#Orange2,#Orange3,#Blue1,#Blue2,#Blue3,#Green1,#Green2,#source:hover{
+            cursor: pointer;
+        }
+
+        #B_audience,#B_journey,#B_comparison,#G_maximizing,#G_overcoming,
+        #O_strategy,#O_conversion,#O_beliefs,#R_engagement,#R_consumer,
+        #R_impact{
+            opacity: 0;
+        }
+#TriangleStroke path{
+  fill: transparent;
+}
+
+#TriangleStroke1 path{
+  fill: white;
+}
+    
+    </style>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.5.9/lottie.min.js'></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+</head>
+<body>
+
+<div id="lottie" style="display: block;"></div>
+
+
+<script type="text/javascript">
+
+var anim;
+var tapCount = 0; // Define anim globally
+
+    var mobileQuery = window.matchMedia("(max-width: 768px)");
+
+    function loadAnimation() {
+        if (mobileQuery.matches) {
+            loadLottieAnimation("https://raw.githubusercontent.com/Meerazzum-045/Lotfiles/main/Vid/VidbrainM.json");
+        } else {
+            loadLottieAnimation("https://raw.githubusercontent.com/Meerazzum-045/Lotfiles/main/Vid/VidbrainD.json");
+        }
+    }
+
+    function loadLottieAnimation(animationPath) {
+        var animationContainer = document.getElementById("lottie");
+        animationContainer.innerHTML = ""; // Clear any previous animation
+        var animationData = {
+            container: animationContainer,
+            renderer: "svg",
+            loop: false,
+            autoplay: false,
+            path: animationPath
+        };
+
+        anim = lottie.loadAnimation(animationData); // Assign to global anim variable
+    }
+
+  loadAnimation();
+  window.addEventListener("resize", loadAnimation);
+
+
+    var isWheelActive = false;
+
+var startSegments = {
+    "Red1": [258, 286],
+    "Red2": [290, 316],
+    "Red3": [322, 350],
+    "Blue1": [2, 30],
+    "Blue2": [34, 62],
+    "Blue3": [66, 94],
+    "Green1": [98, 126],
+    "Green2": [130, 158],
+    "Orange1": [162, 190],
+    "Orange2": [194, 222],
+    "Orange3": [226, 254],
+
+
+
+
+};
+var endSegments = {
+    "Red1": [286, 289],
+    "Red3": [350, 353],
+    "Red2": [318, 321],
+    "Blue1": [30, 33],
+    "Blue2": [62, 65],
+    "Blue3": [94, 97],
+    "Green1": [126, 129],
+    "Green2": [158, 161],
+    "Orange1": [190, 193],
+    "Orange2": [222, 225],
+    "Orange3": [254, 257],
+
+
+
+
+};
+
+var redIds = ["Red1", "Red2", "Red3", "Blue1", "Blue2", "Blue3", "Green1", "Green2", "Orange1", "Orange2", "Orange3"];
+
+
+function setupMobileEvents(id) {
+    var tapCount = 0;
+
+    $("#lottie").on('click', "#" + id, function(event) {
+        tapCount++;
+        if (tapCount === 1) {
+ Styleinn(event,id);
+
+        } else if (tapCount == 2) {
+            var s_segments = startSegments[id];
+            if (s_segments) {
+                anim.playSegments(s_segments, true);
+                isWheelActive = false;
+            }
+        } else {
+            Styleoutt(event, id);
+            tapCount = 0;
+        }
+    });
+}
+
+function setupDesktopEvents(id) {
+    $("#lottie").on("mouseenter", "#" + id, function(event) {
+        isWheelActive = true;
+        Stylein(event, id);
+        $(document).one('click', function(event) {
+            webHandler(event, id);
+        });
+    });
+
+    $("#lottie").on("mouseleave", "#" + id, function(event) {
+        Styleout(event, id);
+        EndSegment(event, id);
+    });
+}
+
+function handleMediaQueryChange() {
+    if (mobileQuery.matches) {
+        redIds.forEach(function(id) {
+            $("#lottie").off("mouseenter mouseleave");
+            setupMobileEvents(id);
+        });
+    } else {
+        redIds.forEach(function(id) {
+            $("#lottie").off("click");
+            setupDesktopEvents(id);
+        });
+    }
+}
+
+
+handleMediaQueryChange();
+mobileQuery.addListener(handleMediaQueryChange);
+
+
+
+
+
+
+    function wheelHandler(event, id) {
+        const deltaY = event.originalEvent.deltaY;
+        var s_segments = startSegments[id];
+        if (s_segments && deltaY > 0) {
+            anim.playSegments(s_segments, true); 
+            $(document).off('wheel'); 
+            isWheelActive = false;
+        }
+    }
+
+function EndSegment(event,id){
+        if (!isWheelActive) {
+          var e_segments = endSegments[id];
+           if (e_segments) {
+            anim.playSegments(e_segments, true); 
+            } 
+        }
+
+}
+  function webHandler(event, id) {
+        
+        var s_segments = startSegments[id];
+        if (s_segments) {
+            anim.playSegments(s_segments, true); 
+            isWheelActive = false;
+        }
+    }
+  function tapHandler(event, id) {
+        
+        if (tapCount===1) {
+          Stylein(event,id);
+          
+        }
+        else if (tapCount==2) {
+        var s_segments = startSegments[id];
+        if (s_segments) {
+            anim.playSegments(s_segments, true); 
+            isWheelActive = false;
+        }  
+        }
+        else{
+          Styleout(event,id);
+          tapCount = 0; 
+        }
+        
+    }
+
+
+function Styleinn(event,id){
+    if (id === "Red1") {  anim.playSegments([256,258], true);  $("#R_impact").css("opacity", "1");   $('#TriangleStroke1 path').css({'stroke':'#000','fill':'#FE3232'}); } 
+       if (id === "Red2") {anim.playSegments([288,290], true); $("#R_consumer").css("opacity", "1"); $('#TriangleStroke1 path').css({'stroke':'#000','fill':'#FE3232'}); } 
+       if (id === "Red3") {anim.playSegments([320,322], true); $("#R_engagement").css("opacity", "1"); $('#TriangleStroke1 path').css({'stroke':'#000','fill':'#FE3232'}); } 
+       if (id === "Blue1") {anim.playSegments([0,2], true);  $("#B_comparison").css("opacity", "1"); $('#TriangleStroke1 path').css({'stroke':'#000','fill':'#39C6E7'}); } 
+       if (id === "Blue2") {anim.playSegments([32,34], true); $("#B_journey").css("opacity", "1"); $('#TriangleStroke1 path').css({'stroke':'#000','fill':'#39C6E7'}); } 
+       if (id === "Blue3") {anim.playSegments([64,66], true); $("#B_audience").css("opacity", "1"); $('#TriangleStroke1 path').css({'stroke':'#000','fill':'#39C6E7'}); } 
+       if (id === "Green1") {anim.playSegments([96,98], true); $("#G_overcoming").css("opacity", "1"); $('#TriangleStroke1 path').css({'stroke':'#000','fill':'#6BCF75'}); } 
+       if (id === "Green2") {anim.playSegments([128,130], true); $("#G_maximizing").css("opacity", "1"); $('#TriangleStroke1 path').css({'stroke':'#000','fill':'#6BCF75'}); } 
+       if (id === "Orange1") {anim.playSegments([160,162], true); $("#O_beliefs").css("opacity", "1"); $('#TriangleStroke1 path').css({'stroke':'#000','fill':'#FFA000'}); } 
+       if (id === "Orange2") {anim.playSegments([192,194], true); $("#O_conversion").css("opacity", "1"); $('#TriangleStroke1 path').css({'stroke':'#000','fill':'#FFA000'}); } 
+       if (id === "Orange3") {anim.playSegments([224,226], true); $("#O_strategy").css("opacity", "1"); $('#TriangleStroke1 path').css({'stroke':'#000','fill':'#FFA000'}); }
+}
+
+    
+function Stylein(event,id){
+    if (id === "Red1") {  anim.playSegments([256,258], true);  $("#R_impact").css("opacity", "1");   $('#TriangleStroke path').css({'stroke':'#000','fill':'#FE3232'}); } 
+       if (id === "Red2") {anim.playSegments([288,290], true); $("#R_consumer").css("opacity", "1"); $('#TriangleStroke path').css({'stroke':'#000','fill':'#FE3232'}); } 
+       if (id === "Red3") {anim.playSegments([320,322], true); $("#R_engagement").css("opacity", "1"); $('#TriangleStroke path').css({'stroke':'#000','fill':'#FE3232'}); } 
+       if (id === "Blue1") {anim.playSegments([0,2], true);  $("#B_comparison").css("opacity", "1"); $('#TriangleStroke path').css({'stroke':'#000','fill':'#39C6E7'}); } 
+       if (id === "Blue2") {anim.playSegments([32,34], true); $("#B_journey").css("opacity", "1"); $('#TriangleStroke path').css({'stroke':'#000','fill':'#39C6E7'}); } 
+       if (id === "Blue3") {anim.playSegments([64,66], true); $("#B_audience").css("opacity", "1"); $('#TriangleStroke path').css({'stroke':'#000','fill':'#39C6E7'}); } 
+       if (id === "Green1") {anim.playSegments([96,98], true); $("#G_overcoming").css("opacity", "1"); $('#TriangleStroke path').css({'stroke':'#000','fill':'#6BCF75'}); } 
+       if (id === "Green2") {anim.playSegments([128,130], true); $("#G_maximizing").css("opacity", "1"); $('#TriangleStroke path').css({'stroke':'#000','fill':'#6BCF75'}); } 
+       if (id === "Orange1") {anim.playSegments([160,162], true); $("#O_beliefs").css("opacity", "1"); $('#TriangleStroke path').css({'stroke':'#000','fill':'#FFA000'}); } 
+       if (id === "Orange2") {anim.playSegments([192,194], true); $("#O_conversion").css("opacity", "1"); $('#TriangleStroke path').css({'stroke':'#000','fill':'#FFA000'}); } 
+       if (id === "Orange3") {anim.playSegments([224,226], true); $("#O_strategy").css("opacity", "1"); $('#TriangleStroke path').css({'stroke':'#000','fill':'#FFA000'}); }
+}
+
+function Styleout(event,id){
+         if (id === "Red1") {anim.playSegments([258,256], true); $("#R_impact").css("opacity", "0");   $('#TriangleStroke path').css({'stroke':'#000','fill':'transparent'}); } 
+       if (id === "Red2") { anim.playSegments([290,288], true); $("#R_consumer").css("opacity", "0"); $('#TriangleStroke path').css({'stroke':'#000','fill':'transparent'}); } 
+       if (id === "Red3") { anim.playSegments([322,320], true); $("#R_engagement").css("opacity", "0"); $('#TriangleStroke path').css({'stroke':'#000','fill':'transparent'}); } 
+       if (id === "Blue1") { anim.playSegments([1,0], true); $("#B_comparison").css("opacity", "0"); $('#TriangleStroke path').css({'stroke':'#000','fill':'transparent'}); } 
+       if (id === "Blue2") { anim.playSegments([34,32], true); $("#B_journey").css("opacity", "0"); $('#TriangleStroke path').css({'stroke':'#000','fill':'transparent'}); } 
+       if (id === "Blue3") { anim.playSegments([66,64], true); $("#B_audience").css("opacity", "0"); $('#TriangleStroke path').css({'stroke':'#000','fill':'transparent'}); } 
+       if (id === "Green1") { anim.playSegments([98,96], true); $("#G_overcoming").css("opacity", "0"); $('#TriangleStroke path').css({'stroke':'#000','fill':'transparent'}); } 
+       if (id === "Green2") { anim.playSegments([130,128], true); $("#G_maximizing").css("opacity", "0"); $('#TriangleStroke path').css({'stroke':'#000','fill':'transparent'}); } 
+       if (id === "Orange1") { anim.playSegments([162,160], true); $("#O_beliefs").css("opacity", "0"); $('#TriangleStroke path').css({'stroke':'#000','fill':'transparent'}); } 
+       if (id === "Orange2") { anim.playSegments([194,192], true); $("#O_conversion").css("opacity", "0"); $('#TriangleStroke path').css({'stroke':'#000','fill':'transparent'}); } 
+       if (id === "Orange3") { anim.playSegments([226,224], true); $("#O_strategy").css("opacity", "0"); $('#TriangleStroke path').css({'stroke':'#000','fill':'transparent'}); } 
+}
+function Styleoutt(event,id){
+        if (id === "Red1") {anim.playSegments([258,256], true); $("#R_impact").css("opacity", "0");   $('#TriangleStroke1 path').css({'stroke':'#000','fill':'transparent'}); } 
+       if (id === "Red2") { anim.playSegments([290,288], true); $("#R_consumer").css("opacity", "0"); $('#TriangleStroke1 path').css({'stroke':'#000','fill':'transparent'}); } 
+       if (id === "Red3") { anim.playSegments([322,320], true); $("#R_engagement").css("opacity", "0"); $('#TriangleStroke1 path').css({'stroke':'#000','fill':'transparent'}); } 
+       if (id === "Blue1") { anim.playSegments([1,0], true); $("#B_comparison").css("opacity", "0"); $('#TriangleStroke1 path').css({'stroke':'#000','fill':'transparent'}); } 
+       if (id === "Blue2") { anim.playSegments([34,32], true); $("#B_journey").css("opacity", "0"); $('#TriangleStroke1 path').css({'stroke':'#000','fill':'transparent'}); } 
+       if (id === "Blue3") { anim.playSegments([66,64], true); $("#B_audience").css("opacity", "0"); $('#TriangleStroke1 path').css({'stroke':'#000','fill':'transparent'}); } 
+       if (id === "Green1") { anim.playSegments([98,96], true); $("#G_overcoming").css("opacity", "0"); $('#TriangleStroke1 path').css({'stroke':'#000','fill':'transparent'}); } 
+       if (id === "Green2") { anim.playSegments([130,128], true); $("#G_maximizing").css("opacity", "0"); $('#TriangleStroke1 path').css({'stroke':'#000','fill':'transparent'}); } 
+       if (id === "Orange1") { anim.playSegments([162,160], true); $("#O_beliefs").css("opacity", "0"); $('#TriangleStroke1 path').css({'stroke':'#000','fill':'transparent'}); } 
+       if (id === "Orange2") { anim.playSegments([194,192], true); $("#O_conversion").css("opacity", "0"); $('#TriangleStroke1 path').css({'stroke':'#000','fill':'transparent'}); } 
+       if (id === "Orange3") { anim.playSegments([226,224], true); $("#O_strategy").css("opacity", "0"); $('#TriangleStroke1 path').css({'stroke':'#000','fill':'transparent'}); } 
+}
+
+$("#lottie").on("click", '#source', function () {
+
+ window.open(
+  'https://www.vidbrain.com/sources/',
+  '_blank' 
+);
+    
+    });
+
+</script>
+
+
+</body>
+</html>
